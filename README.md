@@ -46,7 +46,7 @@ This extension supports all query parameters and extension behaviors defined in 
 Behaves exactly like the standard `GET /collections` endpoint, accepting parameters via the URL.
 
 ```http
-GET /collections-search?limit=10&q=sentinel&sortby=-created
+GET /collections-search?limit=10&q=sentinel&sortby=-id
 ```
 
 ### POST Request
@@ -62,7 +62,7 @@ Accepts a JSON body containing search parameters. This allows for complex querie
   "datetime": "2020-01-01/2021-01-01",
   "limit": 10,
   "sortby": [
-    { "field": "created", "direction": "desc" }
+    { "field": "id", "direction": "desc" }
   ],
   "filter": {
     "op": "and",
