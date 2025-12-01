@@ -47,3 +47,66 @@ Behaves exactly like the standard `GET /collections` endpoint, accepting paramet
 
 ```http
 GET /collections-search?limit=10&q=sentinel&sortby=-created
+```
+
+### POST Request
+Accepts a JSON body containing search parameters. This allows for complex queries that exceed URL length limits or require structured data.
+
+#### Header: `Content-Type: application/json`
+
+#### Body Schema:
+
+```json
+{
+  "q": ["sentinel", "radar"],
+  "datetime": "2020-01-01/2021-01-01",
+  "limit": 10,
+  "sortby": [
+    { "field": "created", "direction": "desc" }
+  ],
+  "filter": {
+    "op": "and",
+    "args": [
+      { "op": "=", "args": [{ "property": "platform" }, "sentinel-1"] }
+    ]
+  }
+}
+```
+
+### Response
+The response format for both GET and POST is a standard STAC Collections object.
+
+```json
+{
+  "collections": [
+    {
+      "type": "Collection",
+      "id": "sentinel-1-grd",
+      "stac_version": "1.0.0",
+      "description": "Sentinel-1 Ground Range Detected",
+      "links": [],
+      "extent": {
+        "spatial": { "bbox": [[-180, -90, 180, 90]] },
+        "temporal": { "interval": [["2014-10-03T00:00:00Z", null]] }
+      }
+    }
+  ],
+  "links": [
+    {
+      "rel": "root",
+      "href": "https://api.example.com/"
+    },
+    {
+      "rel": "self",
+      "href": "https://api.example.com/collections-search"
+    }
+  ]
+}
+```
+
+### Relation to Item Search 
+This endpoint mirrors the design pattern of **Item Search**, creating symmetry in the API:
+Resource,Simple Search (GET),Advanced Search (POST)
+Items,/search,/search
+Collections,/collections-search,/collections-search
+
