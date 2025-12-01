@@ -106,7 +106,9 @@ The response format for both GET and POST is a standard STAC Collections object.
 
 ### Relation to Item Search 
 This endpoint mirrors the design pattern of **Item Search**, creating symmetry in the API:
-Resource,Simple Search (GET),Advanced Search (POST)
-Items,/search,/search
-Collections,/collections-search,/collections-search
+
+| Resource | Simple Search (GET) | Advanced Search (POST) |
+| :--- | :--- | :--- |
+| **Items** | `/search` | `/search` |
+| **Collections** | `/collections-search` | `/collections-search` |
 
