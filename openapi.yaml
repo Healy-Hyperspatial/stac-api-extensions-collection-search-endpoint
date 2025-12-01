@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: STAC API - Collection Search Endpoint
+  version: 1.0.0-proposal
+  description: |
+    An extension adding a dedicated /collections-search endpoint.
+    This resolves routing conflicts between Transaction (POST /collections) 
+    and Advanced Search (POST /collections).
+paths:
+  # ----------------------------------------------------------------------
+  # 1. THE COLLECTION SEARCH ENDPOINT
+  # Supports both GET (Simple) and POST (Advanced)
+  # ----------------------------------------------------------------------
+  /collections-search:
+    get:
+      summary: Search Collections (Simple via URL)
+      operationId: searchCollectionsGet
+      description: |
+        Retrieves a list of collections matching the provided query parameters.
+        Functionally identical to standard GET /collections behavior.
+      parameters:
+        - name: q
+          in: query
+          description: Free-text search terms (comma-separated)
+          schema:
+            type: string
+            example: "radar,sentinel"
+        - name: limit
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: integer
+            default: 10
+        - name: bbox
+          in: query
+          description: Bounding box (minx,miny,maxx,maxy)
+          schema:
+            type: array
+            items:
+              type: number
+            minItems: 4
+            maxItems: 6
+        - name: datetime
+          in: query
+          description: Date range or instant (ISO 8601)
+          schema:
+            type: string
+        - name: sortby
+          in: query
+          description: Fields to sort by (e.g., '+created,-title')
+          schema:
+            type: string
+        - name: filter
+          in: query
+          description: CQL2 text filter expression
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of collections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collections'
+
+    post:
+      summary: Search Collections (Advanced via Body)
+      operationId: searchCollectionsPost
+      description: |
+        Retrieves a list of collections matching the JSON body.
+        Allows for complex CQL filters and large query parameters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionSearchBody'
+      responses:
+        '200':
+          description: A list of collections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collections'
+
+components:
+  schemas:
+    # ----------------------------------------------------------------
+    # The Request Body for POST /collections-search
+    # ----------------------------------------------------------------
+    CollectionSearchBody:
+      type: object
+      properties:
+        q:
+          type: array
+          description: Array of free-text search terms
+          items:
+            type: string
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 10000
+        bbox:
+          type: array
+          items:
+            type: number
+          minItems: 4
+          maxItems: 6
+        datetime:
+          type: string
+          description: Single date+time, or a range ('/' separator)
+        filter:
+          type: object
+          description: CQL2-JSON filter object
+        sortby:
+          type: array
+          items:
+            type: object
+            required: [field]
+            properties:
+              field: {type: string}
+              direction: {type: string, enum: [asc, desc]}
+        fields:
+          type: object
+          description: Include/Exclude fields configuration
+
+    # ----------------------------------------------------------------
+    # Placeholders for Standard STAC Objects
+    # ----------------------------------------------------------------
+    Collections:
+      type: object
+      required: [collections, links]
+      properties:
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+    
+    Collection:
+      type: object
+      description: A standard STAC Collection object
+    
+    Link:
+      type: object
+      required: [rel, href]
+      properties:
+        rel: {type: string}
+        href: {type: string}
