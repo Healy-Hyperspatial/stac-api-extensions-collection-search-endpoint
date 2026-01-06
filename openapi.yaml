@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: STAC API - Collection Search Endpoint
+  title: STAC API - Collection Search Endpoint for Large Payloads
   version: 1.0.0-proposal
   description: |
     An extension adding a dedicated /collections-search endpoint.
