@@ -1,8 +1,8 @@
-# STAC API - Collection Search Endpoint
+# STAC API - Collection Search Endpoint for Large Payloads
 
-- **Title:** Collection Search Endpoint
+- **Title:** Collection Search Endpoint for Large Payloads
 - **Conformance Classes:**
-  - `https://api.stacspec.org/v1.0.0-beta.1/collection-search-endpoint`
+  - `https://api.stacspec.org/v1.0.0-beta.1/collection-search-large-payloads`
 - **Scope:** STAC API - Core
 - **Extension Maturity Classification:** Proposal
 - **Dependencies:**
@@ -12,9 +12,12 @@
 
 ## Introduction
 
-This extension defines a dedicated **Collection Search** endpoint (`/collections-search`) that supports both `GET` and `POST` methods.
+This extension defines a dedicated **Collection Search** endpoint (`/collections-search`) to support advanced searching via `POST` requests.
 
 It provides a safe, conflict-free mechanism to perform advanced searching (filtering, sorting) on Collections without colliding with the **Transaction Extension** on the root `/collections` path.
+
+> [!NOTE]
+> **Interim Status:** This extension is intended as an interim solution to support large search bodies (which exceed URL length limits) while avoiding routing conflicts. The long-term roadmap for the STAC API is to adopt the [`QUERY` HTTP method](https://datatracker.ietf.org/doc/draft-ietf-httpbis-safe-method-w-body/) once it is fully standardized (expected ~2026).
 
 ## Motivation
 
